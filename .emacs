@@ -56,3 +56,5 @@
     (load-theme 'monokai t)
 )
 
+(add-hook 'text-mode-hook 'linum-mode)
+(add-hook 'prog-mode-hook 'linum-mode)
