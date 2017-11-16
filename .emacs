@@ -22,8 +22,10 @@
 (package-initialize)
 
 (setq my-package-list '(
+    monokai-theme
     auto-complete
     cmake-mode
+    elpy ;; pip install rope, jedi, flake8, importmagic, autopep8 
 ))
 
 (unless package-archive-contents
@@ -39,6 +41,7 @@
 (menu-bar-mode 0)
 (setq make-backup-files nil)
 (setq auto-save-default nil)
+(setq inhibit-startup-screen t)
 (delete-selection-mode t)
 (global-auto-revert-mode t)
 
@@ -48,8 +51,28 @@
 
 ;; Face customization
 (set-face-attribute 'default nil :height 100)
-(load-theme 'wombat)
+
+(when (package-installed-p 'monokai-theme)
+    (load-theme 'monokai t)
+)
 
 (when (package-installed-p 'auto-complete)
     (ac-config-default)
 )
+
+(when (package-installed-p 'elpy)
+    (elpy-enable)
+)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages (quote (elpy cmake-mode auto-complete monokai-theme))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
