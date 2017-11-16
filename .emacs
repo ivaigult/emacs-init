@@ -36,7 +36,8 @@
     company
     monokai-theme
     cmake-mode
-    ;; elpy ;; pip install rope, jedi, flake8, importmagic, autopep8 
+    markdown-mode
+    elpy ;; pip install rope, jedi, flake8, importmagic, autopep8 
 ))
 
 (unless package-archive-contents
@@ -56,5 +57,10 @@
     (load-theme 'monokai t)
 )
 
+(when (package-installed-p 'elpy)
+    (elpy-enable)
+)
+
 (add-hook 'text-mode-hook 'linum-mode)
 (add-hook 'prog-mode-hook 'linum-mode)
+
