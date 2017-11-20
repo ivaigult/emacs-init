@@ -13,7 +13,9 @@
 ;;  0. You just DO WHAT THE FUCK YOU WANT TO.
 
 ;; Disable annoying stuff
-(tool-bar-mode 0)
+(when window-system
+    (tool-bar-mode 0)
+)
 (menu-bar-mode 0)
 (setq make-backup-files nil)
 (setq auto-save-default nil)
