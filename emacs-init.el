@@ -63,6 +63,7 @@
 ;; Packages setup
 (when (package-installed-p 'company)
     (add-hook 'after-init-hook 'global-company-mode)
+    (global-set-key  (kbd "M-?") 'company-complete)
 )
 
 (when (package-installed-p 'monokai-theme)
