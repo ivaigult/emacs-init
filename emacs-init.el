@@ -49,6 +49,7 @@
     monokai-theme
     cmake-mode
     markdown-mode
+    rainbow-mode
     elpy ;; pip install rope, jedi, flake8, importmagic, autopep8 
 ))
 
@@ -72,6 +73,10 @@
 
 (when (package-installed-p 'elpy)
     (elpy-enable)
+)
+
+(when (package-installed-p 'rainbow-mode)
+    (add-hook 'css-mode-hook 'rainbow-mode)
 )
 
 (add-hook 'text-mode-hook 'linum-mode)
