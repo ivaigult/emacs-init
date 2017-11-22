@@ -23,6 +23,16 @@
 (delete-selection-mode t)
 (global-auto-revert-mode t)
 
+;; Make OSX to be suatable for software development
+(when (eq system-type 'darwin)
+  (setq mac-command-modifier 'meta)
+  (setq ns-function-modifier 'control)
+  (global-set-key  (kbd "<end>") 'move-end-of-line)
+  (global-set-key  (kbd "<home>") 'move-beginning-of-line)
+  (global-set-key  (kbd "<next>") 'forward-paragraph)
+  (global-set-key  (kbd "<prior>") 'backward-paragraph)
+)
+
 ;; Enable disabled features
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region   'disabled nil)
