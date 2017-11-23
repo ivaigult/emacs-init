@@ -50,7 +50,10 @@
     cmake-mode
     markdown-mode
     rainbow-mode
-    elpy ;; pip install rope, jedi, flake8, importmagic, autopep8 
+    elpy ;; pip install rope, jedi, flake8, importmagic, autopep8
+    emmet-mode
+    less-css-mode
+    yasnippet-snippets
 ))
 
 (unless package-archive-contents
@@ -77,6 +80,16 @@
 
 (when (package-installed-p 'rainbow-mode)
     (add-hook 'css-mode-hook 'rainbow-mode)
+)
+
+(when (package-installed-p 'emmet-mode)
+  (add-hook 'sgml-mode-hook 'emmet-mode)
+  (add-hook 'css-mode-hook  'emmet-mode)
+)
+
+(when (package-installed-p 'yasnippet-snippets)
+    (yas-global-mode)
+    (global-set-key  (kbd "C-j") 'yas-expand)
 )
 
 (add-hook 'text-mode-hook 'linum-mode)
