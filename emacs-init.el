@@ -53,6 +53,7 @@
     elpy ;; pip install rope, jedi, flake8, importmagic, autopep8
     emmet-mode
     less-css-mode
+    impatient-mode
     yasnippet-snippets
 ))
 
