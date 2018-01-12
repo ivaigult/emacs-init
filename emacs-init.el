@@ -55,6 +55,7 @@
     less-css-mode
     impatient-mode
     yasnippet-snippets
+    magit
 ))
 
 (unless package-archive-contents
@@ -76,7 +77,7 @@
 )
 
 (when (package-installed-p 'elpy)
-    (elpy-enable)
+;;    (elpy-enable)
 )
 
 (when (package-installed-p 'rainbow-mode)
