@@ -54,10 +54,12 @@
     yasnippet-snippets
     magit
     go-mode
+    tide
 ))
 
 (unless package-archive-contents
-  (package-refresh-contents))
+  (package-refresh-contents)
+)
 
 (dolist (pkg my-package-list)
   (unless (package-installed-p pkg)
@@ -87,13 +89,26 @@
 )
 
 (when (package-installed-p 'emmet-mode)
-  (add-hook 'sgml-mode-hook 'emmet-mode)
-  (add-hook 'css-mode-hook  'emmet-mode)
+    (add-hook 'sgml-mode-hook 'emmet-mode)
+    (add-hook 'css-mode-hook  'emmet-mode)
 )
 
 (when (package-installed-p 'yasnippet-snippets)
     (yas-global-mode)
     (global-set-key  (kbd "C-j") 'yas-expand)
+)
+
+(when (package-installed-p 'tide)
+    (defun tide-ts-hook ()
+        (tide-setup)
+	(flycheck-mode +1)
+	(setq flycheck-check-syntax-automatically '(save mode-enabled))
+	(eldoc-mode +1)
+	(tide-hl-identifier-mode +1)
+	(company-mode +1)
+    )
+    ;; (add-hook 'before-save-hook 'tide-format-before-save)
+    (add-hook 'typescript-mode-hook 'tide-ts-hook)
 )
 
 (add-hook 'text-mode-hook 'linum-mode)
