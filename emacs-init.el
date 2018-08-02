@@ -25,12 +25,12 @@
 
 ;; Make OSX to be suatable for software development
 (when (eq system-type 'darwin)
-  (setq mac-command-modifier 'meta)
-  (setq ns-function-modifier 'control)
-  (global-set-key  (kbd "<end>") 'move-end-of-line)
-  (global-set-key  (kbd "<home>") 'move-beginning-of-line)
-  (global-set-key  (kbd "<next>") 'forward-paragraph)
-  (global-set-key  (kbd "<prior>") 'backward-paragraph)
+    (setq mac-command-modifier 'meta)
+    (setq ns-function-modifier 'control)
+    (global-set-key  (kbd "<end>") 'move-end-of-line)
+    (global-set-key  (kbd "<home>") 'move-beginning-of-line)
+    (global-set-key  (kbd "<next>") 'forward-paragraph)
+    (global-set-key  (kbd "<prior>") 'backward-paragraph)
 )
 
 ;; Enable disabled features
@@ -58,7 +58,7 @@
 ))
 
 (unless package-archive-contents
-  (package-refresh-contents)
+    (package-refresh-contents)
 )
 
 (dolist (pkg my-package-list)
@@ -109,6 +109,7 @@
     )
     ;; (add-hook 'before-save-hook 'tide-format-before-save)
     (add-hook 'typescript-mode-hook 'tide-ts-hook)
+    (add-hook 'js-mode-hook 'tide-ts-hook)
 )
 
 (add-hook 'text-mode-hook 'linum-mode)
