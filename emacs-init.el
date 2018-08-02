@@ -37,9 +37,6 @@
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region   'disabled nil)
 
-;; Face customization
-(set-face-attribute 'default nil :height 100)
-
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
@@ -50,12 +47,13 @@
     cmake-mode
     markdown-mode
     rainbow-mode
-    elpy ;; pip install rope, jedi, flake8, importmagic, autopep8
+    elpy
     emmet-mode
     less-css-mode
     impatient-mode
     yasnippet-snippets
     magit
+    go-mode
 ))
 
 (unless package-archive-contents
@@ -77,7 +75,11 @@
 )
 
 (when (package-installed-p 'elpy)
-;;    (elpy-enable)
+    (require 'elpy)
+    (setq
+        elpy-modules
+        (remove 'elpy-module-highlight-indentation elpy-modules))
+    (elpy-enable)
 )
 
 (when (package-installed-p 'rainbow-mode)
