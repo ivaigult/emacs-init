@@ -1,117 +1,95 @@
-;;            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-;;                    Version 2, December 2004
-;; 
-;; Copyright (C) 2017 Ivan Vaigult (i.vaigult@gmail.com)
-;; 
-;; Everyone is permitted to copy and distribute verbatim or modified
-;; copies of this license document, and changing it is allowed as long
-;; as the name is changed.
-;; 
-;;            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-;;   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-;; 
-;;  0. You just DO WHAT THE FUCK YOU WANT TO.
-
-;; Disable annoying stuff
-(when window-system
-    (tool-bar-mode 0)
-)
-(menu-bar-mode 0)
-(setq make-backup-files nil)
-(setq auto-save-default nil)
-(setq inhibit-startup-screen t)
-(delete-selection-mode t)
-(global-auto-revert-mode t)
-
-;; Make OSX to be suatable for software development
-(when (eq system-type 'darwin)
-    (setq mac-command-modifier 'meta)
-    (setq ns-function-modifier 'control)
-    (global-set-key  (kbd "<end>") 'move-end-of-line)
-    (global-set-key  (kbd "<home>") 'move-beginning-of-line)
-    (global-set-key  (kbd "<next>") 'forward-paragraph)
-    (global-set-key  (kbd "<prior>") 'backward-paragraph)
-)
-
-;; Enable disabled features
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region   'disabled nil)
+;;; emacs-init -- initialize my emacs
+;;;
+;;; Commentary:
+;;; Code:
 
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(package-initialize)
 
-(setq my-package-list '(
-    company
-    monokai-theme
-    cmake-mode
-    markdown-mode
-    rainbow-mode
-    elpy
-    emmet-mode
-    less-css-mode
-    impatient-mode
-    yasnippet-snippets
-    magit
-    go-mode
-    tide
-))
+(defun emacs-init--config ()
+  "Configure."
+  (when window-system
+    (tool-bar-mode 0))
+  (menu-bar-mode 0)
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
+  (setq inhibit-startup-screen t)
+  (delete-selection-mode t)
+  (global-auto-revert-mode t)
 
-(unless package-archive-contents
-    (package-refresh-contents)
-)
+  (put 'downcase-region 'disabled nil)
+  (put 'upcase-region 'disabled nil)
+  ;; Add line numbers everywhere.
+  (add-hook 'text-mode-hook #'linum-mode)
+  (add-hook 'prog-mode-hook #'linum-mode)
+  ;; Setup flyspell.
+  (require 'flyspell)
+  (setq flyspell-issue-message-flag nil)
+  (add-to-list 'prog-mode-hook #'flyspell-prog-mode)
+  (add-to-list 'text-mode-hook #'flyspell-mode)
+  ;; OSX settings.
+  (when (eq system-type 'darwin)
+    (setq mac-command-modifier 'meta)
+    (setq ns-function-modifier 'control)
+    (global-set-key  (kbd "<end>") #'move-end-of-line)
+    (global-set-key  (kbd "<home>") #'move-beginning-of-line)
+    (global-set-key  (kbd "<next>") #'forward-paragraph)
+    (global-set-key  (kbd "<prior>") #'backward-paragraph)))
 
-(dolist (pkg my-package-list)
-  (unless (package-installed-p pkg)
-    (package-install pkg))
-)
+(defun emacs-init--use-package-bootstrap ()
+  "Download use-package plugin from melpa."
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
-;; Packages setup
-(when (package-installed-p 'company)
-    (add-hook 'after-init-hook 'global-company-mode)
-    (global-set-key  (kbd "M-?") 'company-complete)
-)
+  (unless package-archive-contents
+     (package-refresh-contents))
+ 
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package)))
 
-(when (package-installed-p 'monokai-theme)
-    (load-theme 'monokai t)
-)
+(defun emacs-init--use-package ()
+  "Use required packages."
+  (require 'use-package)
 
-(when (package-installed-p 'elpy)
-    (require 'elpy)
-    (setq
-        elpy-modules
-        (remove 'elpy-module-highlight-indentation elpy-modules))
-    (elpy-enable)
-)
+  (use-package monokai-pro-theme
+    :ensure t
+    :config (load-theme 'monokai-pro t))
+  (use-package cmake-mode :ensure t)
+  (use-package markdown-mode :ensure t)
+  (use-package typescript-mode :ensure t)
+  (use-package magit :ensure t)
+  (use-package ivy
+    :ensure t
+    :init (ivy-mode t))
+  (use-package projectile
+    :init (projectile-global-mode)
+    :config (setq projectile-completion-system 'ivy)
+    :bind-keymap
+    ("C-c p" . projectile-command-map))
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode))
+  (use-package company
+    :ensure t
+    :hook (after-init . global-company-mode)
+    :bind ("M-?" . complete-symbol))
+  (use-package editorconfig
+    :ensure t
+    :config
+    (editorconfig-mode 1))
+  (use-package lsp-mode
+    :ensure t
+    :config (setq lsp-enable-file-watchers nil)
+    :hook (prog-mode . lsp))
+  (use-package lsp-ui :ensure t)
+  (use-package lsp-treemacs :ensure t)
+  (use-package ccls :ensure t))
 
-(when (package-installed-p 'rainbow-mode)
-    (add-hook 'css-mode-hook 'rainbow-mode)
-)
+(defun emacs-init--main ()
+  "Main entrypoint."
+  (emacs-init--config)
+  (emacs-init--use-package-bootstrap)
+  (emacs-init--use-package))
 
-(when (package-installed-p 'emmet-mode)
-    (add-hook 'sgml-mode-hook 'emmet-mode)
-    (add-hook 'css-mode-hook  'emmet-mode)
-)
+(emacs-init--main)
 
-(when (package-installed-p 'yasnippet-snippets)
-    (yas-global-mode)
-    (global-set-key  (kbd "C-j") 'yas-expand)
-)
-
-(when (package-installed-p 'tide)
-    (defun tide-ts-hook ()
-        (tide-setup)
-	(flycheck-mode +1)
-	(setq flycheck-check-syntax-automatically '(save mode-enabled))
-	(eldoc-mode +1)
-	(tide-hl-identifier-mode +1)
-	(company-mode +1)
-    )
-    ;; (add-hook 'before-save-hook 'tide-format-before-save)
-    (add-hook 'typescript-mode-hook 'tide-ts-hook)
-    (add-hook 'js-mode-hook 'tide-ts-hook)
-)
-
-(add-hook 'text-mode-hook 'linum-mode)
-(add-hook 'prog-mode-hook 'linum-mode)
-
+(provide 'emacs-init)
+;;; emacs-init.el ends here
