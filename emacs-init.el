@@ -19,8 +19,8 @@
   (put 'downcase-region 'disabled nil)
   (put 'upcase-region 'disabled nil)
   ;; Add line numbers everywhere.
-  (add-hook 'text-mode-hook #'linum-mode)
-  (add-hook 'prog-mode-hook #'linum-mode)
+  (global-display-line-numbers-mode)
+
   ;; Setup flyspell.
   (require 'flyspell)
   (setq flyspell-issue-message-flag nil)
@@ -65,9 +65,9 @@
     :config (setq projectile-completion-system 'ivy)
     :bind-keymap
     ("C-c p" . projectile-command-map))
-  (use-package flycheck
-    :ensure t
-    :init (global-flycheck-mode))
+  ;; (use-package flycheck
+  ;;   :ensure t
+  ;;   :init (global-flycheck-mode))
   (use-package company
     :ensure t
     :hook (after-init . global-company-mode)
