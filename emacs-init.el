@@ -1,9 +1,15 @@
-;;; emacs-init -- initialize my emacs
+;;; emacs-init -- initialize my emacs  -*- lexical-binding: t; -*-
 ;;;
 ;;; Commentary:
 ;;; Code:
 
 (require 'package)
+
+;; Native-compiling third-party packages on new Emacs releases emits a lot of
+;; (cosmetic) obsolescence warnings from `comp'.  Keep native compilation, but
+;; don't flood *Warnings*/*Messages* with them.
+(setq native-comp-async-report-warnings-errors nil)
+(add-to-list 'warning-suppress-types '(comp))
 
 (defun emacs-init--config ()
   "Configure."
@@ -21,11 +27,12 @@
   ;; Add line numbers everywhere.
   (global-display-line-numbers-mode)
 
-  ;; Setup flyspell.
-  (require 'flyspell)
-  (setq flyspell-issue-message-flag nil)
-  (add-to-list 'prog-mode-hook #'flyspell-prog-mode)
-  (add-to-list 'text-mode-hook #'flyspell-mode)
+  ;; Setup flyspell, but only when a spell-checker is installed.
+  (when (and (require 'flyspell nil t)
+             (executable-find (or ispell-program-name "ispell")))
+    (setq flyspell-issue-message-flag nil)
+    (add-to-list 'prog-mode-hook #'flyspell-prog-mode)
+    (add-to-list 'text-mode-hook #'flyspell-mode))
   ;; OSX settings.
   (when (eq system-type 'darwin)
     (setq mac-command-modifier 'meta)
@@ -58,11 +65,12 @@
   (use-package yaml-mode :ensure t)
   (use-package ivy
     :ensure t
-    :init (ivy-mode t))
+    :config (ivy-mode t))
   (use-package projectile
     :ensure t
-    :init (projectile-global-mode)
-    :config (setq projectile-completion-system 'ivy)
+    :config
+    (projectile-mode 1)
+    (setq projectile-completion-system 'ivy)
     :bind-keymap
     ("C-c p" . projectile-command-map))
   ;; (use-package flycheck
